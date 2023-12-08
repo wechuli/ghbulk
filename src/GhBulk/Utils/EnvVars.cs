@@ -2,7 +2,7 @@ namespace GhBulk.Utils;
 
 public static class EnvVars
 {
-    public static string TOKEN
+    public static string Token
     {
         get
         {
@@ -12,7 +12,7 @@ public static class EnvVars
         }
     }
     
-    public static string HOST
+    public static string Host
     {
         get
         {
