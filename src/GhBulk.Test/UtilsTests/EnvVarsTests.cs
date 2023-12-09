@@ -52,7 +52,6 @@ public class EnvVarsTests: IDisposable
     }
 
     [Fact]
-
     public void PreferGITHUB_TOKENIfGH_TOKENIsAlsoSet()
     {
         string gh_token = "ghs_FNckq5feQFY1inZA1234j2qwCdYRyQ2r8YzA";
@@ -65,7 +64,86 @@ public class EnvVarsTests: IDisposable
 
     }
     
+    [Fact]
+    public void HostShouldBeGITHUB_API_URLIfOnlyThatIsSet()
+    {
+        string apiUrl = "https://github.example.com";
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(),apiUrl);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(), null);
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(), null);
+        
+        Assert.Equal(apiUrl,EnvVars.Host);
+    }
     
+    [Fact]
+    public void HostShouldBeGITHUB_HOSTIfOnlyThatIsSet()
+    {
+        string ghHost = "https://github.example.com";
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(),ghHost);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(), null);
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(), null);
+        
+        Assert.Equal(ghHost,EnvVars.Host);
+    }
+    
+    [Fact]
+    public void HostShouldBeHOSTIfOnlyThatIsSet()
+    {
+        string host = "https://github.example.com";
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(),host);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(), null);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(), null);
+        
+        Assert.Equal(host,EnvVars.Host);
+    }
+    
+    [Fact]
+    public void PreferGITHUB_API_URLIfGITHUB_HOSTIsAlsoSet()
+    {
+        string ghHost = "https://github.example.com";
+        string apiUrl = "https://github.example.com";
+        
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(),ghHost);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(),apiUrl);
+        Assert.Equal(apiUrl,EnvVars.Host);
+        
+
+    }
+    
+    [Fact]
+    public void PreferGITHUB_API_URLIfHOSTIsAlsoSet()
+    {
+        string host = "https://github.example.com";
+        string apiUrl = "https://github.example.com";
+        
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(),host);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(),apiUrl);
+        Assert.Equal(apiUrl,EnvVars.Host);
+        
+
+    }
+    
+    [Fact]
+    public void PreferGITHUB_HOSTIfHOSTIsAlsoSet()
+    {
+        string host = "https://github.example.com";
+        string ghHost = "https://github.example.com";
+        
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(),host);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(),ghHost);
+        Assert.Equal(ghHost,EnvVars.Host);
+        
+
+    }
+    
+    [Fact]
+    public void ReturnGitHubDotComIfNoHostIsSet()
+    {
+        Environment.SetEnvironmentVariable(AppConstants.HOST.ToString(),null);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_HOST.ToString(),null);
+        Environment.SetEnvironmentVariable(AppConstants.GITHUB_API_URL.ToString(),null);
+        Assert.Equal("https://api.github.com",EnvVars.Host);
+    }
     
     public void Dispose()
     {
